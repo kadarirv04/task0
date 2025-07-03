@@ -1,25 +1,24 @@
 package com.example.task1.config;
 
+import com.example.task1.model.Expense;
+import com.example.task1.model.User;
 import com.example.task1.repository.ExpenseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.task1.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.math.BigDecimal;
 
-@Component
-public class DataInitializer implements CommandLineRunner {
-    
-    private final ExpenseRepository expenseRepository;
-    
-    @Autowired
-    public DataInitializer(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
-    }
-    
-    @Override
-    public void run(String... args) throws Exception {
-        // Clear any existing data and start with empty database
-        expenseRepository.deleteAll();
-        
-        System.out.println("Database initialized with empty state!");
+@Configuration
+public class DataInitializer {
+    @Bean
+    public CommandLineRunner loadData(ExpenseRepository repository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        return (args) -> {
+            // Add default user
+            if (userRepository.findByUsername("user") == null) {
+                userRepository.save(new User("user", passwordEncoder.encode("password")));
+            }
+        };
     }
 } 

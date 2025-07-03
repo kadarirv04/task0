@@ -7,6 +7,7 @@ const showExpensesBtn = document.getElementById('showExpensesBtn');
 const deleteAllBtn = document.getElementById('deleteAllBtn');
 const expensesList = document.getElementById('expensesList');
 const expensesContainer = document.getElementById('expensesContainer');
+const logoutBtn = document.getElementById('logoutBtn');
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     expenseForm.addEventListener('submit', handleFormSubmit);
     showExpensesBtn.addEventListener('click', showExpenses);
     deleteAllBtn.addEventListener('click', deleteAllExpenses);
+    logoutBtn.addEventListener('click', handleLogout);
 });
 
 // Set default date to current date
@@ -33,7 +35,7 @@ async function handleFormSubmit(event) {
     
     const formData = new FormData(event.target);
     const expenseData = {
-        description: formData.get('description'),
+        name: formData.get('name'),
         amount: parseFloat(formData.get('amount')),
         expenseDate: formData.get('expenseDate') + 'T00:00:00' // Add time to make it a valid datetime
     };
@@ -97,7 +99,7 @@ function displayExpenses(expenses) {
         const date = new Date(expense.expenseDate).toLocaleDateString();
         return `
             <div>
-                <h3>${expense.description}</h3>
+                <h3>${expense.name}</h3>
                 <p>$${expense.amount.toFixed(2)} - ${date}</p>
                 <button onclick="deleteExpense(${expense.id})">Delete</button>
             </div>
@@ -105,31 +107,6 @@ function displayExpenses(expenses) {
     }).join('');
     
     expensesContainer.innerHTML = expensesHTML;
-}
-
-// Delete expense function
-async function deleteExpense(expenseId) {
-    if (!confirm('Are you sure you want to delete this expense?')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/${expenseId}`, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to delete expense');
-        }
-        
-        // Refresh the expenses list
-        showExpenses();
-        alert('Expense deleted successfully!');
-        
-    } catch (error) {
-        console.error('Error deleting expense:', error);
-        alert('Failed to delete expense. Please try again.');
-    }
 }
 
 // Delete all expenses function
@@ -155,4 +132,31 @@ async function deleteAllExpenses() {
         console.error('Error deleting all expenses:', error);
         alert('Failed to delete all expenses. Please try again.');
     }
+}
+
+// Delete a single expense by id
+async function deleteExpense(id) {
+    if (!confirm('Are you sure you want to delete this expense?')) {
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE_URL}/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete expense');
+        }
+        showExpenses();
+        alert('Expense deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting expense:', error);
+        alert('Failed to delete expense. Please try again.');
+    }
+}
+
+function handleLogout() {
+    fetch('/logout', { method: 'POST' })
+        .then(() => {
+            window.location.href = '/login';
+        });
 } 

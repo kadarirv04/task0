@@ -10,15 +10,11 @@ import java.util.List;
 @Service
 public class ExpenseService {
     
-    private final ExpenseRepository expenseRepository;
-    
     @Autowired
-    public ExpenseService(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
-    }
+    private ExpenseRepository expenseRepository;
     
     // Create a new expense
-    public Expense createExpense(Expense expense) {
+    public Expense addExpense(Expense expense) {
         return expenseRepository.save(expense);
     }
     
@@ -27,17 +23,12 @@ public class ExpenseService {
         return expenseRepository.findAll();
     }
     
-    // Delete an expense
-    public boolean deleteExpense(Long id) {
-        if (expenseRepository.existsById(id)) {
-            expenseRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-    
     // Delete all expenses
     public void deleteAllExpenses() {
         expenseRepository.deleteAll();
+    }
+    
+    public void deleteExpense(Long id) {
+        expenseRepository.deleteById(id);
     }
 } 

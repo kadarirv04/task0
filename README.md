@@ -197,3 +197,19 @@ The application starts with a completely empty database. You can:
 - Test all CRUD operations with your own data
 
 This is a clean, simple expense tracker perfect for learning Spring Boot concepts and basic web development! 
+
+## Running with Docker
+
+You can build and run the application in a Docker container:
+
+1. **Build the Docker image**
+   ```bash
+   docker build -t expense-tracker .
+   ```
+2. **Run the Docker container**
+   ```bash
+   docker run -p 8080:8080 expense-tracker
+   ```
+
+- The app will be available at http://localhost:8080
+- The H2 console will be available at http://localhost:8080/h2-console 

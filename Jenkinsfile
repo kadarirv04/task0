@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "Kadari/task0"
+        IMAGE_NAME = "kadarirv04/task0"
         IMAGE_TAG = "latest"
     }
 

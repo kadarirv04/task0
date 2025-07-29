@@ -16,7 +16,7 @@ public class Expense {
     @NotBlank(message = "Description is required")
     @Size(max = 255, message = "Description cannot exceed 255 characters")
     @Column(nullable = false)
-    private String description;
+    private String name;
     
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
@@ -32,9 +32,9 @@ public class Expense {
     }
     
     // Constructor with required fields
-    public Expense(String description, BigDecimal amount) {
+    public Expense(String name, BigDecimal amount) {
         this();
-        this.description = description;
+        this.name = name;
         this.amount = amount;
     }
     
@@ -47,12 +47,12 @@ public class Expense {
         this.id = id;
     }
     
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
     
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
     
     public BigDecimal getAmount() {
@@ -75,7 +75,7 @@ public class Expense {
     public String toString() {
         return "Expense{" +
                 "id=" + id +
-                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
                 ", amount=" + amount +
                 ", expenseDate=" + expenseDate +
                 '}';

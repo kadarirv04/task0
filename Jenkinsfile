@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh "/usr/local/bin/docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "/usr/local/bin/docker build --platform linux/amd64 -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
         stage('Push Docker Image') {
@@ -37,7 +37,20 @@ pipeline {
         }
         stage('Trigger Render Deploy') {
             steps {
-                echo "Render will auto-deploy the new image if configured."
+                script {
+                    // Option 1: If Render is configured for auto-deploy from Docker Hub
+                    echo "Render will auto-deploy the new image from Docker Hub."
+                    
+                    // Option 2: Manual API call to trigger Render deployment
+                    // Uncomment the lines below if you want to use Render API
+                    // withCredentials([string(credentialsId: 'render-api-token', variable: 'RENDER_API_TOKEN')]) {
+                    //     sh '''
+                    //         curl -X POST "https://api.render.com/v1/services/YOUR_SERVICE_ID/deploys" \
+                    //         -H "Authorization: Bearer $RENDER_API_TOKEN" \
+                    //         -H "Content-Type: application/json"
+                    //     '''
+                    // }
+                }
             }
         }
     }
